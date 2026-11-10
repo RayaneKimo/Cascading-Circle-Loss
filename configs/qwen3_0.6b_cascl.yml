@@ -1,0 +1,51 @@
+# CasCL training configuration — Qwen3-Embedding-0.6B
+# File formats are described in the README ("Data format").
+
+dataset_config:
+  train_dataset_path: 'data/train.json'        # queries + positive + hard/soft graded negatives
+  test_dataset_path: 'data/test.json'          # test queries + graded negatives (+ doc_id)
+  document_dataset_path: 'data/documents.json' # documents split into paragraphs (document-level eval)
+  num_negatives: 10            # number of hard AND of soft negatives per training sample
+  num_eval_documents: 200      # documents sampled for the document-level evaluation during training
+  max_graded_ndcg_samples: 500 # test samples sampled for graded NDCG during training
+  seed: 42
+
+model_config:
+  base_model_reference: 'Qwen/Qwen3-Embedding-0.6B'
+  model_max_length: 384
+  attn_implementation: 'flash_attention_2'   # set to 'sdpa' if flash-attn is not installed
+
+train_config:
+  seed: 42
+  num_train_epochs: 4
+  per_device_train_batch_size: 64
+  per_device_eval_batch_size: 128
+  gradient_accumulation_steps: 1
+  learning_rate: 1e-5
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  fp16: False
+  bf16: True
+  eval_strategy: "steps"
+  eval_steps: 200
+  metric_for_best_model: "cosine_map@100"
+  save_strategy: "steps"
+  save_steps: 200
+  save_total_limit: 7
+  logging_steps: 5
+
+  # ── CasCL loss hyperparameters ──
+  scale: 15                 # InfoNCE scale (1/τ)
+  gamma: 15                 # cascade sharpness γ
+  delta_0: 0.5              # base margin δ₀ (fixed, when delta_warmup is False)
+  delta_warmup: False       # linearly ramp δ₀ from delta_0_start to delta_0_end
+  delta_0_start: 0.1
+  delta_0_end: 0.3
+  delta_warmup_steps: 500   # optimizer steps
+  lambda1: 1.0              # InfoNCE weight
+  lambda2: 0.5              # cascade weight
+  use_relevance_gain: False # weight cascade links by r^0.5 (can be overridden per run)
+  # ── variant-specific defaults (overridable from the CLI) ──
+  alpha_min: 0.1            # cascl_rectified
+  margin_safe: 0.05         # cascl_two_regime
+  alpha_mode: 'relative'    # cascl_neg_relative

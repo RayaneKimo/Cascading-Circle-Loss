@@ -1,0 +1,27 @@
+# Core (training + evaluation). Versions from the environment used for the experiments.
+# Install the CUDA build of torch matching your driver first, e.g.:
+#   pip install torch==2.10.0 --index-url https://download.pytorch.org/whl/cu128
+torch>=2.7
+transformers==4.56.2
+sentence-transformers==5.3.0
+datasets==4.3.0
+accelerate==1.13.0
+huggingface_hub==0.36.2
+tokenizers==0.22.2
+safetensors==0.7.0
+omegaconf==2.3.0
+PyYAML==6.0.3
+numpy>=2.2
+tqdm>=4.67
+tensorboard            # training logs (report_to="tensorboard")
+
+# Recommended: flash-attention 2 (set attn_implementation: 'sdpa' in the config otherwise)
+# pip install flash-attn --no-build-isolation
+
+# Optional: cascl_evaluate.py tries Unsloth first and falls back to SentenceTransformers
+# unsloth==2026.4.4
+# unsloth_zoo==2026.4.6
+
+# Optional: results dashboard (tools/plot_eval.py)
+# gradio
+# plotly

@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Unsloth / HF caches
+unsloth_compiled_cache/
+.cache/
+
+# Data: only the generic example dataset is versioned (see README "Data format")
+data/*
+!data/example/
+
+# Training outputs
+models/
+runs/
+output/
+outputs/
+checkpoints/
+*.safetensors
+*.bin
+*.pt
+
+# Evaluation outputs (remove the eval/ line to publish your results)
+eval/
+eval_results.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
